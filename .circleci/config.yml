@@ -35,14 +35,14 @@ defaults: &defaults
 env: &env
     name: Check for Environment Variables
     command: |
-        if [ ! -z "${SREGISTRY_GOOGLE_PROJECT}" ]; then
+        if [ -z "${SREGISTRY_GOOGLE_PROJECT}" ]; then
               echo "Please export SREGISTRY_GOOGLE_PROJECT"
               exit 1
         fi
-        if [ ! -z "${SREGISTRY_GOOGLE_STORAGE_BUCKET}" ]; then
+        if [ -z "${SREGISTRY_GOOGLE_STORAGE_BUCKET}" ]; then
             SREGISTRY_GOOGLE_STORAGE_BUCKET="sregistry-${SREGISTRY_GOOGLE_PROJECT}"
         fi
-        if [ ! -z "${GOOGLE_COMPUTE_ZONE}" ]; then
+        if [ -z "${GOOGLE_COMPUTE_ZONE}" ]; then
             GOOGLE_COMPUTE_ZONE="us-west1-a"
         fi
         echo "export SREGISTRY_GOOGLE_PROJECT=${SREGISTRY_GOOGLE_PROJECT}" >> ${BASH_ENV}

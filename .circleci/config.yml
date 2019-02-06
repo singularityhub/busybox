@@ -33,10 +33,10 @@ defaults: &defaults
 
 # Here is where we check and set environment variables
 env: &env
-    name: Define container and Docker names
+    name: Check for Environment Variables
     command: |
         if [ ! -z "${SREGISTRY_GOOGLE_PROJECT}" ]; then
-              echo "Please export SREGISTRY_GOOGLE_PROJECT
+              echo "Please export SREGISTRY_GOOGLE_PROJECT"
               exit 1
         fi
         if [ ! -z "${SREGISTRY_GOOGLE_STORAGE_BUCKET}" ]; then
@@ -45,7 +45,6 @@ env: &env
         if [ ! -z "${GOOGLE_COMPUTE_ZONE}" ]; then
             GOOGLE_COMPUTE_ZONE="us-west1-a"
         fi
-        # export to bash environment
         echo "export SREGISTRY_GOOGLE_PROJECT=${SREGISTRY_GOOGLE_PROJECT}" >> ${BASH_ENV}
         echo "export SREGISTRY_GOOGLE_STORAGE_BUCKET=${SREGISTRY_GOOGLE_STORAGE_BUCKET}" >> ${BASH_ENV}
         echo "export GOOGLE_COMPUTE_ZONE=${GOOGLE_COMPUTE_ZONE}" >> ${BASH_ENV}

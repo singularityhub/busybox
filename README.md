@@ -1,6 +1,6 @@
 # BusyBox
 
-This is a library of busybox builds for Singularity images hosted on Singularity Static Registry. The following standard applies:
+This is a library of busybox builds for Singularity images [hosted on Singularity Static Registry](https://singularityhub.github.io/registry-org/singularityhub/busybox/). The following standard applies:
 
  - each `Singularity` file corresponds to a build
  - tags are supported based on the extension of the Singularity file, with an extensionless file corresponding to "latest"

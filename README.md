@@ -8,7 +8,9 @@ This is a library of busybox builds for Singularity images hosted on Singularity
 ## What can I find here?
 
 The repository here serves the container under the namespace `singularityhub/busybox`. Specifically,
-it provides an example of using the [Google Container Builder]().
+it provides an example of using CircleCI to build and push a container to Google Storage,
+and then update manifests at [singularityhub/registry-org](https://www.github.com/singularityhub/registry-org).
+If you are interested in other container build templates, see [this page](https://github.com/singularityhub/registry/wiki/build-templates).
 
 ## How does this work?
 
@@ -28,16 +30,39 @@ singularityhub.github.io/registry-org                       --) the registry int
 singularityhub.github.io/registry-org/singularityhub/busybox --) the added container
 ```
 
-## Google Storage
+# Instructions
+
+## 0. Fork the Repository
+
+For the repository here to your account, and make sure to add write permissions
+for a machine user for the repository, and the machine user's key to CircleCI.
+Full instructions are provided [here](https://github.com/singularityhub/registry/wiki/deploy-container-storage#2-creating-a-connected-repository).
+
+## 1. Setup your Organizational Registry
+
+If you haven't done so, follow the instructions [here](https://github.com/singularityhub/registry/wiki/deploy-container-storage#organizational) to create the organizational registry. You will need to
+update the environment variables in the top of the [.circleci/config.yml](.circleci/config.yml)
+to reflect your repository:
+
+```
+    environment:
+
+      # The GitHub username / reponame that the container will be submit to
+      - REGISTRY_BASE: singularityhub/registry-org
+...
+```
+
+You should only need to do this once. The example provided here uses 
+[singularityhub/registry-org](https://www.github.com/singularityhub/registry-org).
+
+## 2. Google Storage
 
 We will be interacting with Google Storage via the [sregistry](https://www.github.com/singularityhub/sregistry)
 command line client.
 
 ## Required environment variables
 
-We are going to be following the [instructions here](https://circleci.com/docs/2.0/google-auth/)
-to authorize the Google Cloud SDK. Specifically, you should have 
-created a Google Project and [created a service account](https://cloud.google.com/sdk/docs/authorizing#authorizing_with_a_service_account).
+Create a Google Project and [a service account](https://cloud.google.com/sdk/docs/authorizing#authorizing_with_a_service_account).
 
 ### 1. Download the Service Account Key
 
@@ -72,3 +97,4 @@ called `GOOGLE_APPLICATION_CREDENTIALS` along with the following (all project se
 
 Optionally, export a name for your bucket, `SREGISTRY_GOOGLE_STORAGE_BUCKET` 
 (it will be created if it doesn't exist).  It will default to your project id with sregistry- as a prefix.
+Don't forget to add the machine user to the repository, and then add its credential.

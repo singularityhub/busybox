@@ -3,10 +3,9 @@
 # Check https://circleci.com/docs/2.0/language-python/ for more details
 # 
 # Environment: Don't forget to add:
-# GCLOUD_SERVICE_KEY	$(base64 <credential-file>.json)	
-# GOOGLE_COMPUTE_ZONE	us-west1-a	
-# GOOGLE_PROJECT_ID     (grab from browser url)
-#
+# GOOGLE_APPLICATION_CREDENTIALS      $(cat <credential-file>.json)	
+# GOOGLE_COMPUTE_ZONE	              defaults to us-west1-a	
+# SREGISTRY_GOOGLE_PROJECT                   (grab from browser url)
 
 version: 2
 
@@ -94,6 +93,8 @@ jobs:
           command: |
             cd ~/repo
             source ${BASH_ENV}
+            echo $GOOGLE_APPLICATION_CREDENTIALS > /tmp/pancakes.json
+            export GOOGLE_APPLICATION_CREDENTIALS=/tmp/pancakes.json
             NAMESPACE=${CIRCLE_PROJECT_USERNAME}/${CIRCLE_PROJECT_REPONAME}
             echo "Container namespace is $NAMESPACE"
             # Create directory with namespace organization (pr will be based in /tmp/PR)
@@ -121,13 +122,19 @@ jobs:
                     fi
 
                     # Build and upload to storage
-                    /bin/bash build.sh --uri "${NAMESPACE}:${container_tag}" --cli google-storage ${recipe}                                         
+                    lines=$(/bin/bash .circleci/build.sh --uri "${NAMESPACE}:${container_tag}" --cli google-storage ${recipe})
+
+                    # Put last line in variable
+                    for line in $lines; do
+                        url=${line}
+                    done
+       
                     # Rename image based on shasum
                     container_name=`sha256sum ${recipe}.sif | awk '{ print $1 }'`
 
                     echo
                     echo "Successfully built ${recipe}"
-                    echo "   saving to -> $SREGISTRY_GOOGLE_STORAGE_BUCKET"
+                    echo "   bucket    -> $SREGISTRY_GOOGLE_STORAGE_BUCKET"
                     echo "   sha256sum -> $container_name"
                     echo "   tag       -> $container_tag"
  
@@ -135,7 +142,6 @@ jobs:
                     echo "   size       -> $container_size"
 
                     digest=${container_name}
-                    url=
 
                     # Create the README.md with the MANIFEST template
                     export url digest container_size

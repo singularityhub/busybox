@@ -50,7 +50,7 @@ while true; do
             usage
             exit 0
         ;;
-        -u|-uri)
+        -u|--uri)
             shift
             uri="${1:-}"
             shift

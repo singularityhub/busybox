@@ -36,6 +36,13 @@ singularityhub.github.io/registry-org/singularityhub/busybox --) the added conta
 
 For the repository here to your account, and make sure to add write permissions
 for a machine user for the repository, and the machine user's key to CircleCI.
+This means:
+
+ - adding the machine user as a collaborator to the repository (and accepting the invitation)
+ - connecting the repository to CircleCI
+ - navigating to the CircleCI project page logged in as the machine user to follow the project (button in upper right)
+ - going to the settings -> Checkout SSH keys to add the machine user key.
+
 Full instructions are provided [here](https://github.com/singularityhub/registry/wiki/deploy-container-storage#2-creating-a-connected-repository).
 
 ## 1. Setup your Organizational Registry
